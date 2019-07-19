@@ -6,11 +6,14 @@
 
 using Xunit;
 
-namespace NetCoreBB
+namespace NetCoreBB.UnitTests
 {
-    public class UnitTest1
+    public class UnitTest
     {
         [Fact]
-        public void Test1() { }
+        public void TestMe()
+        {
+            Assert.Equal(2, 1 + 1);
+        }
     }
 }
