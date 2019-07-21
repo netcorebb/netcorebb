@@ -5,9 +5,12 @@
  */
 
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+using MoreLinq;
 using NetCoreBB.Infrastructure;
 using NetCoreBB.Interfaces;
+using ServiceStack;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -133,6 +136,57 @@ namespace NetCoreBB.UnitTests.Infrastructure
                     res7.IsNone.ShouldBeTrue();
                     res8.IsNone.ShouldBeTrue();
                     res9.IsNone.ShouldBeTrue();
+                },
+                () => true.ShouldBeFalse("Hashing didn't work."));
+        }
+
+
+        [Fact]
+        public void Decode_works()
+        {
+            Hasher.Hash("abc").Match(hash => {
+                    var res = Hasher.Decode(hash, out var salt, out var pwd);
+                    res.ShouldBeTrue();
+                    salt.ShouldNotBeNull();
+                    salt.Length.ShouldBeGreaterThan(0);
+                    pwd.ShouldNotBeNull();
+                    pwd.Length.ShouldBeGreaterThan(0);
+                },
+                () => true.ShouldBeFalse("Hashing didn't work."));
+        }
+
+
+        [Fact]
+        public void Decode_refuses_empty_values()
+        {
+            new[] {"not a hash", string.Empty, null}.ForEach(hash => {
+                var res = Hasher.Decode(hash, out var salt, out var pwd);
+                res.ShouldBeFalse();
+                salt.ShouldBeNull();
+                pwd.ShouldBeNull();
+            });
+        }
+
+
+        [Fact]
+        public void IsValid_works_with_positive()
+        {
+            Hasher.Hash("abc").Match(
+                hash => Hasher.IsValid(hash).ShouldBeTrue(),
+                () => true.ShouldBeFalse("Hashing didn't work."));
+        }
+
+
+        [Fact]
+        public void IsValid_works_with_negative()
+        {
+            Hasher.Hash("abc").Match(hash => {
+                    var wrongHash1 = hash.Substring(1);
+                    var wrongHash2 = hash.ReplaceAll(".", ",");
+                    var wrongHash3 = hash.Reverse().ToString();
+
+                    new[] {"not a hash", string.Empty, null, wrongHash1, wrongHash2, wrongHash3}
+                        .ShouldAllBe(wrongHash => !Hasher.IsValid(wrongHash));
                 },
                 () => true.ShouldBeFalse("Hashing didn't work."));
         }
