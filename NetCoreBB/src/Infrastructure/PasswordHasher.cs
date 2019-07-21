@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using LanguageExt;
@@ -53,7 +54,7 @@ namespace NetCoreBB.Infrastructure
             }
             var watch = Stopwatch.StartNew();
             var newHash = KeyDerivation.Pbkdf2(trimmedPwd, salt, Algorithm, Iterations, HashLength);
-            return (newHash == pwdBytes, watch.Elapsed);
+            return (newHash.SequenceEqual(pwdBytes), watch.Elapsed);
         }
 
 
@@ -84,7 +85,9 @@ namespace NetCoreBB.Infrastructure
                 return false;
             }
             try {
-                var regex = new Regex("^[0-9a-z+/]{" + SaltLength + "}\\.[0-9a-z+/]{" + HashLength + "}$", RegexOptions.IgnoreCase);
+                var lengthSalt = (int)Math.Ceiling(SaltLength * 4.0 / 3);
+                var lengthHash = (int)Math.Ceiling(HashLength * 4.0 / 3);
+                var regex = new Regex("^[0-9a-zA-Z+/]{" + lengthSalt + "}==\\.[0-9a-zA-Z+/]{" + lengthHash + "}=$");
                 return regex.IsMatch(hash);
             }
             catch (RegexMatchTimeoutException) {
