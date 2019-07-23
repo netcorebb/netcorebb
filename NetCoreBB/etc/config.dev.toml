@@ -1,0 +1,5 @@
+# Used automatically in AspNetCore development mode
+
+[System]
+SystemInstalled = true
+DevelopmentMode = true
