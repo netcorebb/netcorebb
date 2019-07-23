@@ -1,0 +1,25 @@
+# TOML config file for NetCoreBB
+
+[System]
+SystemInstalled = false
+DevelopmentMode = false
+UnderAttackMode = false
+MaintenanceMode = false
+
+[MySQL]
+Server = "localhost"
+SslMode = "Preferred"
+CharSet = "utf8mb4"
+
+Database = "netcorebb"
+Prefix = "ncbb_"
+
+Username = "root"
+Password = ""
+
+#Port = 3306
+#Protocol = "socket"
+#Other = [
+#            ["CertificateFile", "C:\folder\client.pfx"],
+#            ["CertificatePassword", "password"]
+#        ]
