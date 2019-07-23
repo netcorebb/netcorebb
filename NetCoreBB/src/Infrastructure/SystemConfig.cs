@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using NetCoreBB.Domain.Model.SystemConfig;
 using NetCoreBB.Interfaces;
 
 namespace NetCoreBB.Infrastructure
@@ -15,7 +14,7 @@ namespace NetCoreBB.Infrastructure
     {
         public IObservable<Domain.Model.SystemConfig.System> System { get; }
 
-        public IObservable<MySql> MySql { get; }
+        public IObservable<Domain.Model.SystemConfig.MySql> MySql { get; }
 
         private string ConfigFile { get; }
         private FileSystemWatcher Watcher { get; }
