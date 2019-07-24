@@ -2,9 +2,9 @@
 
 [System]
 SystemInstalled = false
+MaintenanceMode = false
 DevelopmentMode = false
 UnderAttackMode = false
-MaintenanceMode = false
 
 [MySQL]
 Server = "localhost"
@@ -12,10 +12,9 @@ SslMode = "Preferred"
 Database = "netcorebb"
 Username = "root"
 Password = ""
-
-#Port = 3306
-#Protocol = "unix"
-#Other = [
-#            ["CertificateFile", "C:\folder\client.pfx"],
-#            ["CertificatePassword", "password"]
-#        ]
+Port = 3306
+Protocol = "socket"
+Other = [
+    #["CertificateFile", "C:\folder\client.pfx"],
+    #["CertificatePassword", "password"]
+]

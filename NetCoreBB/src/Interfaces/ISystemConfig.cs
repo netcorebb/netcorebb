@@ -8,8 +8,6 @@ using System;
 
 namespace NetCoreBB.Interfaces
 {
-    using NetCoreBB.Domain.Model.SystemConfig;
-
     /// <summary>
     /// Live-reloaded configuration from config.toml
     /// </summary>
@@ -18,11 +16,11 @@ namespace NetCoreBB.Interfaces
         /// <summary>
         /// Observable system configuration
         /// </summary>
-        IObservable<System> System { get; }
+        IObservable<Domain.Model.SystemConfig.System> System { get; }
 
         /// <summary>
         /// Observable MySQL configuration
         /// </summary>
-        IObservable<MySql> MySql { get; }
+        IObservable<Domain.Model.SystemConfig.MySql> MySql { get; }
     }
 }
