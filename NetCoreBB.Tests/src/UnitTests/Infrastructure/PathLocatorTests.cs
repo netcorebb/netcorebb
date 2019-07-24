@@ -7,7 +7,6 @@
 using System.IO;
 using NetCoreBB.Infrastructure;
 using NetCoreBB.Interfaces;
-using ServiceStack;
 using Shouldly;
 using Xunit;
 
@@ -16,7 +15,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
     public class PathLocatorTests
     {
         private IPathLocator Locator { get; } = new PathLocator();
-        private string EtcPath { get; } = Directory.GetCurrentDirectory().AppendPath("etc");
+        private string EtcPath { get; } = Path.Combine(Directory.GetCurrentDirectory(), "etc");
 
 
         [Fact]
