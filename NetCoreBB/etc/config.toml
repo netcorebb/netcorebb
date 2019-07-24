@@ -9,16 +9,12 @@ MaintenanceMode = false
 [MySQL]
 Server = "localhost"
 SslMode = "Preferred"
-CharSet = "utf8mb4"
-
 Database = "netcorebb"
-Prefix = "ncbb_"
-
 Username = "root"
 Password = ""
 
 #Port = 3306
-#Protocol = "socket"
+#Protocol = "unix"
 #Other = [
 #            ["CertificateFile", "C:\folder\client.pfx"],
 #            ["CertificatePassword", "password"]
