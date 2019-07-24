@@ -18,7 +18,7 @@ namespace NetCoreBB.Infrastructure
         {
             get
             {
-                var path = Directory.GetCurrentDirectory().AppendPath("etc");
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "etc");
                 return path.DirectoryExists() ? Some(path) : None;
             }
         }
