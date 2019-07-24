@@ -14,7 +14,8 @@ namespace NetCoreBB.Interfaces
     public interface IPathLocator
     {
         /// <summary>
-        /// Full path where configuration files are stored, e.g. 'etc'
+        /// Full path where configuration files are stored, e.g. 'etc'.
+        /// `None` is returned if path does not exist.
         /// </summary>
         Option<string> Config { get; }
     }
