@@ -10,13 +10,17 @@ namespace NetCoreBB.Domain.Model.SystemConfig
 {
     public class MySql
     {
-        public string Server { get; set; }
-        public string SslMode { get; set; }
-        public string Database { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Protocol { get; set; }
-        public int Port { get; set; }
-        public Map<string, string> Other { get; set; }
+        public string Server { get; set; } = "localhost";
+        public string SslMode { get; set; } = "Preferred";
+        public string Database { get; set; } = "netcorebb";
+        public string Username { get; set; } = "root";
+        public string Password { get; set; } = "";
+        public string Protocol { get; set; } = "socket";
+        public int Port { get; set; } = 3306;
+
+        /// <summary>
+        /// Other MySQL parameters excluding the main parameters above
+        /// </summary>
+        public Map<string, string> Other { get; set; } = Map<string, string>.Empty;
     }
 }
