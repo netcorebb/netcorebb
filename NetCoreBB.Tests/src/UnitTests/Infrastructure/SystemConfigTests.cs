@@ -22,15 +22,32 @@ namespace NetCoreBB.UnitTests.Infrastructure
     public class SystemConfigTests : IDisposable
     {
         [Fact]
-        public void Read_has_parsed_system_section()
+        public void Read_returns_defaults_if_no_config_is_present()
         {
-            var defaults = new Domain.Model.SystemConfig.System();
-            var (system1, _) = Config.Read();
-            system1.Installed.ShouldBe(defaults.Installed);
-            system1.Maintenance.ShouldBe(defaults.Maintenance);
-            system1.Development.ShouldBe(defaults.Development);
-            system1.UnderAttack.ShouldBe(defaults.UnderAttack);
+            var sysDef = new Domain.Model.SystemConfig.System();
+            var mysDef = new Domain.Model.SystemConfig.MySql();
 
+            var (sysRes, mysRes) = Config.Read();
+
+            sysRes.Installed.ShouldBe(sysDef.Installed);
+            sysRes.Maintenance.ShouldBe(sysDef.Maintenance);
+            sysRes.Development.ShouldBe(sysDef.Development);
+            sysRes.UnderAttack.ShouldBe(sysDef.UnderAttack);
+
+            mysRes.Server.ShouldBe(mysDef.Server);
+            mysRes.SslMode.ShouldBe(mysDef.SslMode);
+            mysRes.Database.ShouldBe(mysDef.Database);
+            mysRes.Username.ShouldBe(mysDef.Username);
+            mysRes.Password.ShouldBe(mysDef.Password);
+            mysRes.Protocol.ShouldBe(mysDef.Protocol);
+            mysRes.Port.ShouldBe(mysDef.Port);
+            mysRes.Other.ShouldBe(mysDef.Other);
+        }
+
+
+        [Fact]
+        public void Read_parses_system_section()
+        {
             const string main1 = @"[System]
                 SystemInstalled = true
                 MaintenanceMode = true
@@ -38,11 +55,11 @@ namespace NetCoreBB.UnitTests.Infrastructure
                 UnderAttackMode = true";
 
             File.WriteAllText(Path.Combine(EtcPath, "config.toml"), main1);
-            var (system2, _) = Config.Read();
-            system2.Installed.ShouldBeTrue();
-            system2.Maintenance.ShouldBeTrue();
-            system2.Development.ShouldBeTrue();
-            system2.UnderAttack.ShouldBeTrue();
+            var (system1, _) = Config.Read();
+            system1.Installed.ShouldBeTrue();
+            system1.Maintenance.ShouldBeTrue();
+            system1.Development.ShouldBeTrue();
+            system1.UnderAttack.ShouldBeTrue();
 
             const string main2 = @"[System]
                 SystemInstalled = false
@@ -51,28 +68,17 @@ namespace NetCoreBB.UnitTests.Infrastructure
                 UnderAttackMode = false";
 
             File.WriteAllText(Path.Combine(EtcPath, "config.toml"), main2);
-            var (system3, _) = Config.Read();
-            system3.Installed.ShouldBeFalse();
-            system3.Maintenance.ShouldBeFalse();
-            system3.Development.ShouldBeFalse();
-            system3.UnderAttack.ShouldBeFalse();
+            var (system2, _) = Config.Read();
+            system2.Installed.ShouldBeFalse();
+            system2.Maintenance.ShouldBeFalse();
+            system2.Development.ShouldBeFalse();
+            system2.UnderAttack.ShouldBeFalse();
         }
 
 
         [Fact]
-        public void Read_has_parsed_mysql_section()
+        public void Read_parses_mysql_section()
         {
-            var defaults = new Domain.Model.SystemConfig.MySql();
-            var (_, mysql1) = Config.Read();
-            mysql1.Server.ShouldBe(defaults.Server);
-            mysql1.SslMode.ShouldBe(defaults.SslMode);
-            mysql1.Database.ShouldBe(defaults.Database);
-            mysql1.Username.ShouldBe(defaults.Username);
-            mysql1.Password.ShouldBe(defaults.Password);
-            mysql1.Protocol.ShouldBe(defaults.Protocol);
-            mysql1.Port.ShouldBe(defaults.Port);
-            mysql1.Other.ShouldBe(defaults.Other);
-
             const string main = @"[MySQL]
                 Server = ""a""
                 SslMode = ""b""
@@ -87,15 +93,15 @@ namespace NetCoreBB.UnitTests.Infrastructure
                 ""i"" = true";
 
             File.WriteAllText(Path.Combine(EtcPath, "config.toml"), main);
-            var (_, mysql2) = Config.Read();
-            mysql2.Server.ShouldBe("a");
-            mysql2.SslMode.ShouldBe("b");
-            mysql2.Database.ShouldBe("c");
-            mysql2.Username.ShouldBe("d");
-            mysql2.Password.ShouldBe("e");
-            mysql2.Protocol.ShouldBe("f");
-            mysql2.Port.ShouldBe(12345);
-            mysql2.Other.ShouldBe(Map(("g", "xxx"), ("h", "123"), ("i", "true")));
+            var (_, mysql) = Config.Read();
+            mysql.Server.ShouldBe("a");
+            mysql.SslMode.ShouldBe("b");
+            mysql.Database.ShouldBe("c");
+            mysql.Username.ShouldBe("d");
+            mysql.Password.ShouldBe("e");
+            mysql.Protocol.ShouldBe("f");
+            mysql.Port.ShouldBe(12345);
+            mysql.Other.ShouldBe(Map(("g", "xxx"), ("h", "123"), ("i", "true")));
         }
 
 
