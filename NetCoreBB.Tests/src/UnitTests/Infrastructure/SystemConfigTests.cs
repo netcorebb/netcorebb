@@ -166,7 +166,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
             for (var i = 0; i < 3; i++) {
                 File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true \n [MySQL]\n Port = 2");
-                await Task.Delay(2000);
+                await WaitAfterFileCreation();
             }
 
             visited1.ShouldBe(2);
@@ -183,11 +183,23 @@ namespace NetCoreBB.UnitTests.Infrastructure
             using var obs2 = Config.MySql.Subscribe(_ => visited++);
 
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
-            await Task.Delay(2000);
+            await WaitAfterFileCreation();
 
             visited.ShouldBe(0);
             Config.Read().Item2.Port.ShouldBe(17);
         }
+
+#if RELEASE
+        private static async Task WaitAfterFileCreation()
+        {
+            await Task.Delay(5000);
+        }
+#else
+        private static async Task WaitAfterFileCreation()
+        {
+            await Task.Delay(2000);
+        }
+#endif
 
 
         [Fact]
