@@ -38,6 +38,15 @@ namespace NetCoreBB.Infrastructure
         {
             Locator = locator.Value;
             Environment = environment.Value;
+
+            Locator.Config.IfSome(path => {
+                Watcher.Path = path;
+                Watcher.Filters.Add(MainCfg);
+                Watcher.Filters.Add(UserCfg);
+                Watcher.Filters.Add(DevCfg);
+            });
+
+            Watcher.Changed += (sender, args) => ReadAndFire();
         }
 
 
@@ -46,19 +55,7 @@ namespace NetCoreBB.Infrastructure
             if (Watcher.EnableRaisingEvents) {
                 return false;
             }
-            if (Watcher.Path.IsEmpty()) {
-                Locator.Config.IfSome(path => {
-                    Watcher.Path = path;
-                    Watcher.Filters.Add(MainCfg);
-                    Watcher.Filters.Add(UserCfg);
-                    Watcher.Filters.Add(DevCfg);
-                });
-                Watcher.Changed += (sender, args) => ReadAndFire();
-            }
-
             Watcher.EnableRaisingEvents = true;
-
-            ReadAndFire();
 
             return true;
         }
