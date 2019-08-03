@@ -7,6 +7,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using LanguageExt;
 using MoreLinq;
 using NetCoreBB.Infrastructure;
@@ -16,6 +18,8 @@ using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 using static LanguageExt.Prelude;
+using Sys = NetCoreBB.Domain.Model.SystemConfig.System;
+using MyS = NetCoreBB.Domain.Model.SystemConfig.MySql;
 
 namespace NetCoreBB.UnitTests.Infrastructure
 {
@@ -24,9 +28,8 @@ namespace NetCoreBB.UnitTests.Infrastructure
         [Fact]
         public void Read_returns_defaults_if_no_config_is_present()
         {
-            var sysDef = new Domain.Model.SystemConfig.System();
-            var mysDef = new Domain.Model.SystemConfig.MySql();
-
+            var sysDef = new Sys();
+            var mysDef = new MyS();
             var (sysRes, mysRes) = Config.Read();
 
             sysRes.Installed.ShouldBe(sysDef.Installed);
@@ -109,16 +112,13 @@ namespace NetCoreBB.UnitTests.Infrastructure
         public void Read_works_with_merged_configs()
         {
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 123");
-            var (_, res1) = Config.Read();
-            res1.Port.ShouldBe(123);
+            Config.Read().Item2.Port.ShouldBe(123);
 
             File.WriteAllText(ConfigUsrFile, "[MySQL]\n Port = 456");
-            var (_, res2) = Config.Read();
-            res2.Port.ShouldBe(456);
+            Config.Read().Item2.Port.ShouldBe(456);
 
             File.WriteAllText(ConfigDevFile, "[MySQL]\n Port = 789");
-            var (_, res3) = Config.Read();
-            res3.Port.ShouldBe(789);
+            Config.Read().Item2.Port.ShouldBe(789);
         }
 
 
@@ -129,17 +129,93 @@ namespace NetCoreBB.UnitTests.Infrastructure
             File.WriteAllText(ConfigDevFile, "[MySQL]\n Port = 456");
 
             var config1 = new SystemConfig(new PathLocatorMock(), new EnvironmentMock(true));
-            var (_, res1) = config1.Read();
-            res1.Port.ShouldBe(456);
+            config1.Read().Item2.Port.ShouldBe(456);
 
             var config2 = new SystemConfig(new PathLocatorMock(), new EnvironmentMock(false));
-            var (_, res2) = config2.Read();
-            res2.Port.ShouldBe(123);
+            config2.Read().Item2.Port.ShouldBe(123);
+        }
+
+
+        [Fact]
+        public async Task System_and_MySql_fire_on_file_changes_if_watched()
+        {
+            File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = false \n [MySQL]\n Port = 1");
+            var (sys1, mys1) = Config.Read();
+            sys1.Installed.ShouldBeFalse();
+            mys1.Port.ShouldBe(1);
+
+            var visited1 = 0;
+            var visited2 = 0;
+
+            using var obs1 = Config.System
+                .DistinctUntilChanged().Subscribe(sys => {
+                    sys.Installed.ShouldBeTrue();
+                    visited1++;
+                });
+            using var obs2 = Config.MySql
+                .DistinctUntilChanged().Subscribe(mys => {
+                    mys.Port.ShouldBe(2);
+                    visited1++;
+                });
+            using var obs3 = Config.System
+                .Subscribe(_ => visited2++);
+            using var obs4 = Config.MySql
+                .Subscribe(_ => visited2++);
+
+            Config.StartWatching();
+
+            for (var i = 0; i < 3; i++) {
+                File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true \n [MySQL]\n Port = 2");
+                await Task.Delay(2000);
+            }
+
+            visited1.ShouldBe(2);
+            visited2.ShouldBe(6);
+        }
+
+
+        [Fact]
+        public async Task System_and_MySql_do_not_fire_if_not_watched()
+        {
+            var visited = 0;
+
+            using var obs1 = Config.System.Subscribe(_ => visited++);
+            using var obs2 = Config.MySql.Subscribe(_ => visited++);
+
+            File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
+            await Task.Delay(2000);
+
+            visited.ShouldBe(0);
+            Config.Read().Item2.Port.ShouldBe(17);
+        }
+
+
+        [Fact]
+        public void System_times_out_without_file_changes()
+        {
+            Assert.Throws<TimeoutException>(() => Config.System
+                .Take(1).Timeout(TimeSpan.FromSeconds(3)).Wait());
+        }
+
+
+        [Fact]
+        public void MySql_times_out_without_file_changes()
+        {
+            Assert.Throws<TimeoutException>(() => Config.MySql
+                .Take(1).Timeout(TimeSpan.FromSeconds(3)).Wait());
+        }
+
+
+        [Fact]
+        public void StartWatching_and_StopWatching_work()
+        {
+            Config.StartWatching().ShouldBeTrue();
+            Config.StartWatching().ShouldBeFalse();
+            Config.StopWatching();
         }
 
 
         // --- Setup ---
-
         public class PathLocatorMock : IPathLocator
         {
             public static string ConfigPath { get; } = Path.Combine(Directory.GetCurrentDirectory(), "etc_test");
@@ -156,7 +232,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
                 DevMode = devMode;
             }
 
-            public bool DevMode { get; set; }
+            public bool DevMode { get; }
         }
 
         public string ConfigFile => Path.Combine(EtcPath, "config.toml");

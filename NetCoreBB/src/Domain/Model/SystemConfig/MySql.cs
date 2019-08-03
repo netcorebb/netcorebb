@@ -8,7 +8,7 @@ using LanguageExt;
 
 namespace NetCoreBB.Domain.Model.SystemConfig
 {
-    public class MySql
+    public class MySql : Record<MySql>
     {
         public string Server { get; set; } = "localhost";
         public string SslMode { get; set; } = "Preferred";
