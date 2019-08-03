@@ -3,3 +3,4 @@ obj/
 .vs/
 .idea/
 launchSettings.json
+*.user.toml
