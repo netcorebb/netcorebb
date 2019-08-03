@@ -54,7 +54,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
                 DevelopmentMode = true
                 UnderAttackMode = true";
 
-            File.WriteAllText(Path.Combine(EtcPath, "config.toml"), main1);
+            File.WriteAllText(ConfigFile, main1);
             var (system1, _) = Config.Read();
             system1.Installed.ShouldBeTrue();
             system1.Maintenance.ShouldBeTrue();
@@ -67,7 +67,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
                 DevelopmentMode = false
                 UnderAttackMode = false";
 
-            File.WriteAllText(Path.Combine(EtcPath, "config.toml"), main2);
+            File.WriteAllText(ConfigFile, main2);
             var (system2, _) = Config.Read();
             system2.Installed.ShouldBeFalse();
             system2.Maintenance.ShouldBeFalse();
@@ -92,7 +92,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
                 ""h"" = 123
                 ""i"" = true";
 
-            File.WriteAllText(Path.Combine(EtcPath, "config.toml"), main);
+            File.WriteAllText(ConfigFile, main);
             var (_, mysql) = Config.Read();
             mysql.Server.ShouldBe("a");
             mysql.SslMode.ShouldBe("b");
@@ -102,6 +102,39 @@ namespace NetCoreBB.UnitTests.Infrastructure
             mysql.Protocol.ShouldBe("f");
             mysql.Port.ShouldBe(12345);
             mysql.Other.ShouldBe(Map(("g", "xxx"), ("h", "123"), ("i", "true")));
+        }
+
+
+        [Fact]
+        public void Read_works_with_merged_configs()
+        {
+            File.WriteAllText(ConfigFile, "[MySQL]\n Port = 123");
+            var (_, res1) = Config.Read();
+            res1.Port.ShouldBe(123);
+
+            File.WriteAllText(ConfigUsrFile, "[MySQL]\n Port = 456");
+            var (_, res2) = Config.Read();
+            res2.Port.ShouldBe(456);
+
+            File.WriteAllText(ConfigDevFile, "[MySQL]\n Port = 789");
+            var (_, res3) = Config.Read();
+            res3.Port.ShouldBe(789);
+        }
+
+
+        [Fact]
+        public void Read_ignores_dev_config_in_production()
+        {
+            File.WriteAllText(ConfigFile, "[MySQL]\n Port = 123");
+            File.WriteAllText(ConfigDevFile, "[MySQL]\n Port = 456");
+
+            var config1 = new SystemConfig(new PathLocatorMock(), new EnvironmentMock(true));
+            var (_, res1) = config1.Read();
+            res1.Port.ShouldBe(456);
+
+            var config2 = new SystemConfig(new PathLocatorMock(), new EnvironmentMock(false));
+            var (_, res2) = config2.Read();
+            res2.Port.ShouldBe(123);
         }
 
 
@@ -118,13 +151,17 @@ namespace NetCoreBB.UnitTests.Infrastructure
             public bool IsProduction => !DevMode;
             public bool IsDevelopment => DevMode;
 
-            public EnvironmentMock(bool devMode = false)
+            public EnvironmentMock(bool devMode = true)
             {
                 DevMode = devMode;
             }
 
             public bool DevMode { get; set; }
         }
+
+        public string ConfigFile => Path.Combine(EtcPath, "config.toml");
+        public string ConfigUsrFile => Path.Combine(EtcPath, "config.user.toml");
+        public string ConfigDevFile => Path.Combine(EtcPath, "config.dev.toml");
 
         private string EtcPath { get; } = PathLocatorMock.ConfigPath;
 
@@ -144,6 +181,10 @@ namespace NetCoreBB.UnitTests.Infrastructure
             Directory.EnumerateFiles(EtcPath)
                 .Where(x => x.EndsWith(".toml"))
                 .ForEach(File.Delete);
+
+            Directory.EnumerateFiles(EtcPath)
+                .Where(x => x.EndsWith(".toml"))
+                .ShouldBeEmpty();
         }
 
         public void Dispose()
