@@ -5,6 +5,7 @@
 
 trigger:
 - master
+- dev
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -24,3 +25,6 @@ steps:
 
 - script: dotnet test --configuration $(buildConfiguration)
   displayName: 'dotnet test $(buildConfiguration)'
+
+- script: sudo apt-get -y install cloc && ./cloc.sh
+  displayName: cloc
