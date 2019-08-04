@@ -200,7 +200,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
 
         [Fact]
-        public async Task System_and_MySql_emit_multiple_times_if_distinct()
+        public async Task System_and_MySql_fire_multiple_times_if_distinct()
         {
             var visited = 0;
             using var obs = Config.MySql.Subscribe(_ => visited++);
