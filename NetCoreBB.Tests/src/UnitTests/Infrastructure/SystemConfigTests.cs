@@ -14,6 +14,7 @@ using MoreLinq;
 using NetCoreBB.Infrastructure;
 using NetCoreBB.Interfaces;
 using ServiceStack;
+using ServiceStack.Text;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -203,7 +204,11 @@ namespace NetCoreBB.UnitTests.Infrastructure
         public async Task System_and_MySql_fire_multiple_times_if_distinct()
         {
             var visited = 0;
-            using var obs = Config.MySql.Subscribe(_ => visited++);
+
+            using var obs = Config.MySql.Subscribe(mysql => {
+                visited++;
+                Output.WriteLine(mysql.Dump());
+            });
 
             Config.StartWatching();
 

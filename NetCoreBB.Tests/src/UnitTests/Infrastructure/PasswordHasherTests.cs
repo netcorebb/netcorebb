@@ -16,7 +16,6 @@ using ServiceStack;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
-using static LanguageExt.Prelude;
 
 namespace NetCoreBB.UnitTests.Infrastructure
 {
