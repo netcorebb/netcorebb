@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using LanguageExt;
@@ -170,8 +171,14 @@ namespace NetCoreBB.UnitTests.Infrastructure
         {
             var visited = 0;
 
-            using var obs1 = Config.System.Subscribe(_ => visited++);
-            using var obs2 = Config.MySql.Subscribe(_ => visited++);
+            using var obs1 = Config.System.ObserveOn(Scheduler.CurrentThread).Subscribe(sys => {
+                visited++;
+                Output.WriteLine(sys.Dump());
+            });
+            using var obs2 = Config.MySql.ObserveOn(Scheduler.CurrentThread).Subscribe(mys => {
+                visited++;
+                Output.WriteLine(mys.Dump());
+            });
 
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
             await Task.Delay(2000);
@@ -186,8 +193,14 @@ namespace NetCoreBB.UnitTests.Infrastructure
         {
             var visited = 0;
 
-            using var obs1 = Config.System.Subscribe(_ => visited++);
-            using var obs2 = Config.MySql.Subscribe(_ => visited++);
+            using var obs1 = Config.System.ObserveOn(Scheduler.CurrentThread).Subscribe(sys => {
+                visited++;
+                Output.WriteLine(sys.Dump());
+            });
+            using var obs2 = Config.MySql.ObserveOn(Scheduler.CurrentThread).Subscribe(mys => {
+                visited++;
+                Output.WriteLine(mys.Dump());
+            });
 
             Config.StartWatching();
 
@@ -205,9 +218,9 @@ namespace NetCoreBB.UnitTests.Infrastructure
         {
             var visited = 0;
 
-            using var obs = Config.MySql.Subscribe(mysql => {
+            using var obs = Config.MySql.ObserveOn(Scheduler.CurrentThread).Subscribe(mys => {
                 visited++;
-                Output.WriteLine(mysql.Dump());
+                Output.WriteLine(mys.Dump());
             });
 
             Config.StartWatching();
