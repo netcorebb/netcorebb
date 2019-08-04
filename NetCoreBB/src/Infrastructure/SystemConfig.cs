@@ -45,16 +45,17 @@ namespace NetCoreBB.Infrastructure
 
             Locator.Config.IfSome(path => {
                 Watcher.Path = path;
+
                 Watcher.Filters.Add(MainCfg);
                 Watcher.Filters.Add(UserCfg);
                 Watcher.Filters.Add(DevCfg);
-            });
 
-            Watcher.Changed += (sender, args) => {
-                var (system, mysql) = Read();
-                _system.OnNext(system);
-                _mysql.OnNext(mysql);
-            };
+                Watcher.Changed += (sender, args) => {
+                    var (system, mysql) = Read();
+                    _system.OnNext(system);
+                    _mysql.OnNext(mysql);
+                };
+            });
         }
 
 
@@ -63,9 +64,11 @@ namespace NetCoreBB.Infrastructure
             if (Watcher.EnableRaisingEvents) {
                 return false;
             }
-            Watcher.EnableRaisingEvents = true;
-
-            return true;
+            if (!Watcher.Path.IsEmpty()) {
+                Watcher.EnableRaisingEvents = true;
+                return true;
+            }
+            return false;
         }
 
 

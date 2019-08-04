@@ -241,11 +241,25 @@ namespace NetCoreBB.UnitTests.Infrastructure
         }
 
 
+        [Fact]
+        public void StartWatching_returns_false_if_no_path_is_present()
+        {
+            var config = new SystemConfig(new PathLocatorMock2(), new EnvironmentMock());
+            config.StartWatching().ShouldBeFalse();
+        }
+
+
         // --- Setup ---
+
         public class PathLocatorMock : IPathLocator
         {
             public static string ConfigPath { get; } = Path.Combine(Directory.GetCurrentDirectory(), "etc_test");
             public Option<string> Config => ConfigPath.DirectoryExists() ? Some(ConfigPath) : None;
+        }
+
+        public class PathLocatorMock2 : IPathLocator
+        {
+            public Option<string> Config => None;
         }
 
         public class EnvironmentMock : IEnvironment

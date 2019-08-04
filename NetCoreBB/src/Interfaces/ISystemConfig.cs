@@ -20,19 +20,19 @@ namespace NetCoreBB.Interfaces
         (Domain.Model.SystemConfig.System, Domain.Model.SystemConfig.MySql) Read();
 
         /// <summary>
-        /// Observable system configuration; fires on file changes to config.toml and user/dev config files.
+        /// Observable system configuration; fires on distinct file changes to config.toml and user/dev config files.
         /// </summary>
         IObservable<Domain.Model.SystemConfig.System> System { get; }
 
         /// <summary>
-        /// Observable MySQL configuration; fires on file changes to config.toml and user/dev config files.
+        /// Observable MySQL configuration; fires on distinct file changes to config.toml and user/dev config files.
         /// </summary>
         IObservable<Domain.Model.SystemConfig.MySql> MySql { get; }
 
         /// <summary>
         /// Starts watching changes to config.toml and user/dev config files.
         /// </summary>
-        /// <returns>True upon success; false if already started</returns>
+        /// <returns>True upon success; false if already started or watcher cannot be started.</returns>
         bool StartWatching();
 
         /// <summary>
