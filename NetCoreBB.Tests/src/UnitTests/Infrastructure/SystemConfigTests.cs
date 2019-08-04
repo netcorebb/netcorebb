@@ -157,7 +157,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
             Config.StartWatching();
 
-            File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true \n [MySQL]\n Port = 2");
+            File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true\n [MySQL]\n Port = 2");
             await Task.Delay(2000);
 
             visited.ShouldBe(2);
@@ -177,6 +177,42 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
             visited.ShouldBe(0);
             Config.Read().Item2.Port.ShouldBe(17);
+        }
+
+
+        [Fact]
+        public async Task System_and_MySql_do_not_emit_duplicates()
+        {
+            var visited = 0;
+
+            using var obs1 = Config.System.Subscribe(_ => visited++);
+            using var obs2 = Config.MySql.Subscribe(_ => visited++);
+
+            Config.StartWatching();
+
+            await Range(1, 3).EachAsync(async (a, b) => {
+                File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true\n [MySQL]\n Port = 17");
+                await Task.Delay(2000);
+            });
+
+            visited.ShouldBe(2);
+        }
+
+
+        [Fact]
+        public async Task System_and_MySql_emit_multiple_times_if_distinct()
+        {
+            var visited = 0;
+            using var obs = Config.MySql.Subscribe(_ => visited++);
+
+            Config.StartWatching();
+
+            await Range(1, 3).EachAsync(async (num, _) => {
+                File.WriteAllText(ConfigFile, "[MySQL]\n Port = " + num);
+                await Task.Delay(2000);
+            });
+
+            visited.ShouldBe(3);
         }
 
 
