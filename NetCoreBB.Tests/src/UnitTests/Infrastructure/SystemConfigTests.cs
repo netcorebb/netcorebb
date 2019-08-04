@@ -144,34 +144,23 @@ namespace NetCoreBB.UnitTests.Infrastructure
             sys1.Installed.ShouldBeFalse();
             mys1.Port.ShouldBe(1);
 
-            var visited1 = 0;
-            var visited2 = 0;
+            var visited = 0;
 
-            using var obs1 = Config.System
-                .DistinctUntilChanged().Subscribe(sys => {
-                    sys.Installed.ShouldBeTrue();
-                    visited1++;
-                });
-            using var obs2 = Config.MySql
-                .DistinctUntilChanged().Subscribe(mys => {
-                    mys.Port.ShouldBe(2);
-                    visited1++;
-                });
-            using var obs3 = Config.System
-                .Subscribe(_ => visited2++);
-            using var obs4 = Config.MySql
-                .Subscribe(_ => visited2++);
+            using var obs1 = Config.System.Subscribe(sys => {
+                sys.Installed.ShouldBeTrue();
+                visited++;
+            });
+            using var obs2 = Config.MySql.Subscribe(mys => {
+                mys.Port.ShouldBe(2);
+                visited++;
+            });
 
             Config.StartWatching();
 
-            for (var i = 0; i < 3; i++) {
-                File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true \n [MySQL]\n Port = 2");
-                await Task.Delay(2000);
-            }
+            File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true \n [MySQL]\n Port = 2");
+            await Task.Delay(2000);
 
-            visited1.ShouldBe(2);
-            // Todo: Does not work under Azure; it says 10
-            //visited2.ShouldBe(6);
+            visited.ShouldBe(2);
         }
 
 

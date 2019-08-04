@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using LanguageExt;
 using NetCoreBB.Interfaces;
@@ -22,8 +23,11 @@ namespace NetCoreBB.Infrastructure
 
     public class SystemConfig : ISystemConfig, IDisposable
     {
-        public IObservable<Sys> System { get; } = new Subject<Sys>();
-        public IObservable<MyS> MySql { get; } = new Subject<MyS>();
+        public IObservable<Sys> System => _system.DistinctUntilChanged();
+        public IObservable<MyS> MySql => _mysql.DistinctUntilChanged();
+
+        private readonly Subject<Sys> _system = new Subject<Sys>();
+        private readonly Subject<MyS> _mysql = new Subject<MyS>();
 
         private FileSystemWatcher Watcher { get; } = new FileSystemWatcher();
         private IPathLocator Locator { get; }
@@ -46,7 +50,11 @@ namespace NetCoreBB.Infrastructure
                 Watcher.Filters.Add(DevCfg);
             });
 
-            Watcher.Changed += (sender, args) => ReadAndFire();
+            Watcher.Changed += (sender, args) => {
+                var (system, mysql) = Read();
+                _system.OnNext(system);
+                _mysql.OnNext(mysql);
+            };
         }
 
 
@@ -71,15 +79,10 @@ namespace NetCoreBB.Infrastructure
         {
             StopWatching();
             Watcher.Dispose();
+            _system.Dispose();
+            _mysql.Dispose();
         }
 
-
-        private void ReadAndFire()
-        {
-            var (system, mysql) = Read();
-            ((ISubject<Sys>)System).OnNext(system);
-            ((ISubject<MyS>)MySql).OnNext(mysql);
-        }
 
         public (Sys, MyS) Read()
         {
