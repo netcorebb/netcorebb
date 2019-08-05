@@ -139,6 +139,26 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
 
         [Fact]
+        public void Read_returns_last_valid_config_after_file_corruption()
+        {
+            File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
+            var mysql1 = Config.Read().Item2;
+            mysql1.Port.ShouldBe(17);
+
+            File.WriteAllText(ConfigFile, "[MySQL]\n sidjhkbfdsih");
+            var mysql2 = Config.Read().Item2;
+            mysql2.Port.ShouldBe(17);
+
+            File.WriteAllText(ConfigFile, "[MySQL]\n Port = 18");
+            var mysql3 = Config.Read().Item2;
+            mysql3.Port.ShouldBe(18);
+
+            mysql1.ShouldBe(mysql2);
+            mysql2.ShouldNotBe(mysql3);
+        }
+
+
+        [Fact]
         public async Task System_and_MySql_fire_on_file_changes_if_watched()
         {
             File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = false \n [MySQL]\n Port = 1");
