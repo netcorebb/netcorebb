@@ -287,6 +287,24 @@ namespace NetCoreBB.UnitTests.Infrastructure
         }
 
 
+        [Fact]
+        public void StartWatching_reconfigures_after_path_is_available()
+        {
+            Directory.EnumerateFiles(EtcPath).ForEach(File.Delete);
+            Directory.Delete(EtcPath);
+
+            var locator = new PathLocatorMock();
+            locator.Config.IsNone.ShouldBeTrue();
+
+            var config = new SystemConfig(locator, new EnvironmentMock());
+            config.StartWatching().ShouldBeFalse();
+
+            Directory.CreateDirectory(EtcPath);
+            locator.Config.IsSome.ShouldBeTrue();
+            config.StartWatching().ShouldBeTrue();
+        }
+
+
         // --- Setup ---
 
         public class PathLocatorMock : IPathLocator
