@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Text;
 using LanguageExt;
 using NetCoreBB.Interfaces;
 using ServiceStack;
@@ -136,7 +137,14 @@ namespace NetCoreBB.Infrastructure
             if (!file.FileExists()) {
                 return false;
             }
-            var toml = Toml.Parse(file.ReadAllText());
+            string? data;
+            try {
+                data = File.ReadAllText(file, Encoding.UTF8);
+            }
+            catch (Exception) {
+                return false;
+            }
+            var toml = Toml.Parse(data);
             if (toml.HasErrors) {
                 return false;
             }
