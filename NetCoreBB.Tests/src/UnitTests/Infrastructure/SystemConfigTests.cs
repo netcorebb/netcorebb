@@ -7,7 +7,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using LanguageExt;
@@ -191,11 +190,11 @@ namespace NetCoreBB.UnitTests.Infrastructure
         {
             var visited = 0;
 
-            using var obs1 = Config.System.ObserveOn(Scheduler.CurrentThread).Subscribe(sys => {
+            using var obs1 = Config.System.Subscribe(sys => {
                 visited++;
                 Output.WriteLine(sys.Dump());
             });
-            using var obs2 = Config.MySql.ObserveOn(Scheduler.CurrentThread).Subscribe(mys => {
+            using var obs2 = Config.MySql.Subscribe(mys => {
                 visited++;
                 Output.WriteLine(mys.Dump());
             });
@@ -213,11 +212,11 @@ namespace NetCoreBB.UnitTests.Infrastructure
         {
             var visited = 0;
 
-            using var obs1 = Config.System.ObserveOn(Scheduler.CurrentThread).Subscribe(sys => {
+            using var obs1 = Config.System.Subscribe(sys => {
                 visited++;
                 Output.WriteLine(sys.Dump());
             });
-            using var obs2 = Config.MySql.ObserveOn(Scheduler.CurrentThread).Subscribe(mys => {
+            using var obs2 = Config.MySql.Subscribe(mys => {
                 visited++;
                 Output.WriteLine(mys.Dump());
             });
@@ -238,7 +237,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
         {
             var visited = 0;
 
-            using var obs = Config.MySql.ObserveOn(Scheduler.CurrentThread).Subscribe(mys => {
+            using var obs = Config.MySql.Subscribe(mys => {
                 visited++;
                 Output.WriteLine(mys.Dump());
             });
