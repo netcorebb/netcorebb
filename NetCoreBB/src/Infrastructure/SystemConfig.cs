@@ -29,6 +29,8 @@ namespace NetCoreBB.Infrastructure
         private readonly Subject<Sys> _system = new Subject<Sys>();
         private readonly Subject<MyS> _mysql = new Subject<MyS>();
 
+        private (Sys, MyS)? _lastValidConfig;
+
         private FileSystemWatcher Watcher { get; } = new FileSystemWatcher();
         private IPathLocator Locator { get; }
         private IEnvironment Environment { get; }
@@ -43,27 +45,27 @@ namespace NetCoreBB.Infrastructure
             Locator = locator.Value;
             Environment = environment.Value;
 
-            Locator.Config.IfSome(path => {
-                Watcher.Path = path;
+            Locator.Config.IfSome(path => Watcher.Path = path);
 
-                Watcher.Filters.Add(MainCfg);
-                Watcher.Filters.Add(UserCfg);
-                Watcher.Filters.Add(DevCfg);
+            Watcher.Filters.Add(MainCfg);
+            Watcher.Filters.Add(UserCfg);
+            Watcher.Filters.Add(DevCfg);
 
-                Watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
-                Watcher.IncludeSubdirectories = false;
+            Watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
+            Watcher.IncludeSubdirectories = false;
 
-                Watcher.Changed += (sender, args) => {
-                    var (system, mysql) = Read();
-                    _system.OnNext(system);
-                    _mysql.OnNext(mysql);
-                };
-            });
+            Watcher.Changed += (sender, args) => {
+                var (system, mysql) = Read();
+                _system.OnNext(system);
+                _mysql.OnNext(mysql);
+            };
         }
 
 
         public bool StartWatching()
         {
+            Locator.Config.IfSome(path => Watcher.Path = path);
+
             if (Watcher.EnableRaisingEvents) {
                 return false;
             }
@@ -92,13 +94,25 @@ namespace NetCoreBB.Infrastructure
 
         public (Sys, MyS) Read()
         {
-            var system = new Sys();
-            var mysql = new MyS();
+            (Sys, MyS)? res = null;
+            ReadFromConfigFiles().Match(tuple => {
+                res = tuple;
+                _lastValidConfig = res;
+            }, () => { res = _lastValidConfig ?? (new Sys(), new MyS()); });
+            return res ?? throw new Exception();
+        }
 
-            Locator.Config.IfSome(cfg => {
-                var mainCfgFile = Path.Combine(cfg, MainCfg);
-                var userCfgFile = Path.Combine(cfg, UserCfg);
-                var devCfgFile = Path.Combine(cfg, DevCfg);
+
+        private Option<(Sys, MyS)> ReadFromConfigFiles()
+        {
+            var res = (new Sys(), new MyS());
+            var (system, mysql) = res;
+            var success = false;
+
+            Locator.Config.IfSome(path => {
+                var mainCfgFile = Path.Combine(path, MainCfg);
+                var userCfgFile = Path.Combine(path, UserCfg);
+                var devCfgFile = Path.Combine(path, DevCfg);
 
                 if (!Process(mainCfgFile, ref system, ref mysql)) {
                     return;
@@ -108,9 +122,10 @@ namespace NetCoreBB.Infrastructure
                 if (Environment.IsDevelopment) {
                     Process(devCfgFile, ref system, ref mysql);
                 }
+                success = true;
             });
 
-            return (system, mysql);
+            return success ? res : Option<(Sys, MyS)>.None;
         }
 
         private static bool Process(string file, ref Sys system, ref MyS mysql)
