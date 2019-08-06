@@ -7,6 +7,8 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using LanguageExt;
+using LanguageExt.UnsafeValueAccess;
 using MoreLinq;
 using NetCoreBB.Infrastructure;
 using NetCoreBB.Interfaces;
@@ -65,9 +67,12 @@ namespace NetCoreBB.UnitTests.Infrastructure
             var res1 = Hasher.Hash(string.Empty);
             var res2 = Hasher.Hash(" ");
             var res3 = Hasher.Hash("   ");
-            var res4 = Hasher.Hash(null);
 
-            new[] {res1, res2, res3, res4}.ShouldAllBe(x => x.IsNone);
+#nullable disable
+            Assert.Throws<ValueIsNullException>(() => Hasher.Hash(null));
+#nullable enable
+
+            new[] {res1, res2, res3}.ShouldAllBe(x => x.IsNone);
         }
 
 
@@ -119,23 +124,24 @@ namespace NetCoreBB.UnitTests.Infrastructure
         [Fact]
         public void Verify_refuses_empty_values()
         {
-            var res1 = Hasher.Verify(null, null);
-            var res2 = Hasher.Verify(null, "abc");
-            var res3 = Hasher.Verify("abc", null);
+#nullable disable
+            Assert.Throws<ValueIsNullException>(() => {
+                Hasher.Verify(null, null);
+                Hasher.Verify(null, "abc");
+                Hasher.Verify("abc", null);
+            });
+#nullable enable
+            var res1 = Hasher.Verify(string.Empty, string.Empty);
+            var res2 = Hasher.Verify(string.Empty, "abc");
+            var res3 = Hasher.Verify("abc", string.Empty);
 
-            var res4 = Hasher.Verify(string.Empty, string.Empty);
-            var res5 = Hasher.Verify(string.Empty, "abc");
-            var res6 = Hasher.Verify("abc", string.Empty);
-
-            new[] {res1, res2, res3, res4, res5, res6}.ShouldAllBe(x => x.IsNone);
+            new[] {res1, res2, res3}.ShouldAllBe(x => x.IsNone);
 
             Hasher.Hash("abc").Match(hash => {
-                    var res7 = Hasher.Verify(string.Empty, hash);
-                    var res8 = Hasher.Verify(null, hash);
-                    var res9 = Hasher.Verify("   ", hash);
-                    res7.IsNone.ShouldBeTrue();
-                    res8.IsNone.ShouldBeTrue();
-                    res9.IsNone.ShouldBeTrue();
+                    var res4 = Hasher.Verify(string.Empty, hash);
+                    var res5 = Hasher.Verify("   ", hash);
+                    res4.IsNone.ShouldBeTrue();
+                    res5.IsNone.ShouldBeTrue();
                 },
                 () => true.ShouldBeFalse("Hashing didn't work."));
         }
@@ -147,10 +153,10 @@ namespace NetCoreBB.UnitTests.Infrastructure
             Hasher.Hash("abc").Match(hash => {
                     var res = Hasher.Decode(hash, out var salt, out var pwd);
                     res.ShouldBeTrue();
-                    salt.ShouldNotBeNull();
-                    salt.Length.ShouldBeGreaterThan(0);
-                    pwd.ShouldNotBeNull();
-                    pwd.Length.ShouldBeGreaterThan(0);
+                    salt.IsSome.ShouldBeTrue();
+                    salt.ValueUnsafe().Length.ShouldBeGreaterThan(0);
+                    pwd.IsSome.ShouldBeTrue();
+                    pwd.ValueUnsafe().Length.ShouldBeGreaterThan(0);
                 },
                 () => true.ShouldBeFalse("Hashing didn't work."));
         }
@@ -159,12 +165,16 @@ namespace NetCoreBB.UnitTests.Infrastructure
         [Fact]
         public void Decode_refuses_empty_values()
         {
-            new[] {"not a hash", string.Empty, null}.ForEach(hash => {
+            new[] {"not a hash", string.Empty}.ForEach(hash => {
                 var res = Hasher.Decode(hash, out var salt, out var pwd);
                 res.ShouldBeFalse();
-                salt.ShouldBeNull();
-                pwd.ShouldBeNull();
+                salt.IsNone.ShouldBeTrue();
+                pwd.IsNone.ShouldBeTrue();
             });
+#nullable disable
+            Assert.Throws<ValueIsNullException>(() =>
+                Hasher.Decode(null, out var salt, out var pwd));
+#nullable enable
         }
 
 
@@ -181,12 +191,13 @@ namespace NetCoreBB.UnitTests.Infrastructure
         public void IsValid_works_with_negative()
         {
             Hasher.Hash("abc").Match(hash => {
+                    hash.ShouldNotBeNull();
                     var wrongHash1 = hash.Substring(1);
                     var wrongHash2 = hash.ReplaceAll(".", ",");
                     var wrongHash3 = hash.Reverse().ToString();
 
-                    new[] {"not a hash", string.Empty, null, wrongHash1, wrongHash2, wrongHash3}
-                        .ShouldAllBe(wrongHash => !Hasher.IsValid(wrongHash));
+                    new[] {"not a hash", string.Empty, wrongHash1, wrongHash2, wrongHash3}
+                        .ShouldAllBe(wrongHash => wrongHash != null && !Hasher.IsValid(wrongHash));
                 },
                 () => true.ShouldBeFalse("Hashing didn't work."));
         }
