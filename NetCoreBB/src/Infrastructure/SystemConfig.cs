@@ -22,17 +22,18 @@ namespace NetCoreBB.Infrastructure
     using MyS = Domain.Model.SystemConfig.MySql;
 
 
+    // Todo: Implement safe file watcher and event emitter
     public class SystemConfig : ISystemConfig, IDisposable
     {
-        public IObservable<Sys> System => _system.DistinctUntilChanged();
-        public IObservable<MyS> MySql => _mysql.DistinctUntilChanged();
+        //public IObservable<Sys> System => _system.DistinctUntilChanged();
+        //public IObservable<MyS> MySql => _mysql.DistinctUntilChanged();
 
-        private readonly Subject<Sys> _system = new Subject<Sys>();
-        private readonly Subject<MyS> _mysql = new Subject<MyS>();
+        //private readonly Subject<Sys> _system = new Subject<Sys>();
+        //private readonly Subject<MyS> _mysql = new Subject<MyS>();
 
         private (Sys, MyS)? _lastValidConfig;
 
-        private FileSystemWatcher Watcher { get; } = new FileSystemWatcher();
+        //private FileSystemWatcher Watcher { get; } = new FileSystemWatcher();
         private IPathLocator Locator { get; }
         private IEnvironment Environment { get; }
 
@@ -46,7 +47,7 @@ namespace NetCoreBB.Infrastructure
             Locator = locator.Value;
             Environment = environment.Value;
 
-            Locator.Config.IfSome(path => Watcher.Path = path);
+            /*Locator.Config.IfSome(path => Watcher.Path = path);
 
             Watcher.Filters.Add(MainCfg);
             Watcher.Filters.Add(UserCfg);
@@ -59,13 +60,13 @@ namespace NetCoreBB.Infrastructure
                 var (system, mysql) = Read();
                 _system.OnNext(system);
                 _mysql.OnNext(mysql);
-            };
+            };*/
         }
 
 
         public bool StartWatching()
         {
-            Locator.Config.IfSome(path => Watcher.Path = path);
+/*            Locator.Config.IfSome(path => Watcher.Path = path);
 
             if (Watcher.EnableRaisingEvents) {
                 return false;
@@ -73,23 +74,23 @@ namespace NetCoreBB.Infrastructure
             if (!Watcher.Path.IsEmpty()) {
                 Watcher.EnableRaisingEvents = true;
                 return true;
-            }
+            }*/
             return false;
         }
 
 
         public void StopWatching()
         {
-            Watcher.EnableRaisingEvents = false;
+/*            Watcher.EnableRaisingEvents = false;*/
         }
 
 
         public void Dispose()
         {
-            StopWatching();
+/*            StopWatching();
             Watcher.Dispose();
             _system.Dispose();
-            _mysql.Dispose();
+            _mysql.Dispose();*/
         }
 
 
