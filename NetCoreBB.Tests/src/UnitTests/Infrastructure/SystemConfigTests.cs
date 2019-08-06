@@ -138,6 +138,26 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
 
         [Fact]
+        public void Read_returns_last_valid_config_after_file_corruption()
+        {
+            File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
+            var mysql1 = Config.Read().Item2;
+            mysql1.Port.ShouldBe(17);
+
+            File.WriteAllText(ConfigFile, "[MySQL]\n sidjhkbfdsih");
+            var mysql2 = Config.Read().Item2;
+            mysql2.Port.ShouldBe(17);
+
+            File.WriteAllText(ConfigFile, "[MySQL]\n Port = 18");
+            var mysql3 = Config.Read().Item2;
+            mysql3.Port.ShouldBe(18);
+
+            mysql1.ShouldBe(mysql2);
+            mysql2.ShouldNotBe(mysql3);
+        }
+
+
+/*        [Fact]
         public async Task System_and_MySql_fire_on_file_changes_if_watched()
         {
             File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = false \n [MySQL]\n Port = 1");
@@ -159,99 +179,146 @@ namespace NetCoreBB.UnitTests.Infrastructure
             Config.StartWatching();
 
             File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true\n [MySQL]\n Port = 2");
-            await Task.Delay(2000);
+            await Task.Delay(500);
+
+            obs1.Dispose();
+            obs2.Dispose();
 
             visited.ShouldBe(2);
-        }
+        }*/
 
 
-        [Fact]
+/*        [Fact]
         public async Task System_and_MySql_do_not_fire_if_not_watched()
         {
             var visited = 0;
 
-            using var obs1 = Config.System.Subscribe(_ => visited++);
-            using var obs2 = Config.MySql.Subscribe(_ => visited++);
+            using var obs1 = Config.System.Subscribe(sys => {
+                visited++;
+                Output.WriteLine(sys.Dump());
+            });
+            using var obs2 = Config.MySql.Subscribe(mys => {
+                visited++;
+                Output.WriteLine(mys.Dump());
+            });
 
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
-            await Task.Delay(2000);
+            await Task.Delay(500);
+
+            obs1.Dispose();
+            obs2.Dispose();
 
             visited.ShouldBe(0);
             Config.Read().Item2.Port.ShouldBe(17);
-        }
+        }*/
 
 
-        [Fact]
+/*        [Fact]
         public async Task System_and_MySql_do_not_emit_duplicates()
         {
             var visited = 0;
 
-            using var obs1 = Config.System.Subscribe(_ => visited++);
-            using var obs2 = Config.MySql.Subscribe(_ => visited++);
+            using var obs1 = Config.System.Subscribe(sys => {
+                visited++;
+                Output.WriteLine(sys.Dump());
+            });
+            using var obs2 = Config.MySql.Subscribe(mys => {
+                visited++;
+                Output.WriteLine(mys.Dump());
+            });
 
             Config.StartWatching();
 
-            await Range(1, 3).EachAsync(async (a, b) => {
-                File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true\n [MySQL]\n Port = 17");
-                await Task.Delay(2000);
-            });
+            for (int i = 0; i < 3; i++) {
+                const string data = "[System]\n SystemInstalled = true\n [MySQL]\n Port = 17";
+                File.WriteAllText(ConfigFile, data);
+                await Task.Delay(500);
+                var text = File.ReadAllText(ConfigFile);
+                text.ShouldBe(data);
+            }
+
+            obs1.Dispose();
+            obs2.Dispose();
 
             visited.ShouldBe(2);
-        }
+        }*/
 
 
-        [Fact]
+/*        [Fact]
         public async Task System_and_MySql_fire_multiple_times_if_distinct()
         {
             var visited = 0;
 
-            using var obs = Config.MySql.Subscribe(mysql => {
+            using var obs = Config.MySql.Subscribe(mys => {
                 visited++;
-                Output.WriteLine(mysql.Dump());
+                Output.WriteLine(mys.Dump());
             });
 
             Config.StartWatching();
 
-            await Range(1, 3).EachAsync(async (num, _) => {
-                File.WriteAllText(ConfigFile, "[MySQL]\n Port = " + num);
-                await Task.Delay(2000);
-            });
+            for (int i = 0; i < 3; i++) {
+                var data = "[MySQL]\n Port = " + i;
+                File.WriteAllText(ConfigFile, data);
+                await Task.Delay(500);
+                var text = File.ReadAllText(ConfigFile);
+                text.ShouldBe(data);
+            }
+
+            obs.Dispose();
 
             visited.ShouldBe(3);
-        }
+        }*/
 
 
-        [Fact]
+/*        [Fact]
         public void System_times_out_without_file_changes()
         {
             Assert.Throws<TimeoutException>(() => Config.System
                 .Take(1).Timeout(TimeSpan.FromSeconds(3)).Wait());
-        }
+        }*/
 
 
-        [Fact]
+/*        [Fact]
         public void MySql_times_out_without_file_changes()
         {
             Assert.Throws<TimeoutException>(() => Config.MySql
                 .Take(1).Timeout(TimeSpan.FromSeconds(3)).Wait());
-        }
+        }*/
 
 
-        [Fact]
+/*        [Fact]
         public void StartWatching_and_StopWatching_work()
         {
             Config.StartWatching().ShouldBeTrue();
             Config.StartWatching().ShouldBeFalse();
             Config.StopWatching();
-        }
+        }*/
 
 
-        [Fact]
+/*        [Fact]
         public void StartWatching_returns_false_if_no_path_is_present()
         {
             var config = new SystemConfig(new PathLocatorMock2(), new EnvironmentMock());
             config.StartWatching().ShouldBeFalse();
-        }
+        }*/
+
+
+/*        [Fact]
+        public void StartWatching_reconfigures_after_path_is_available()
+        {
+            Directory.EnumerateFiles(EtcPath).ForEach(File.Delete);
+            Directory.Delete(EtcPath);
+
+            var locator = new PathLocatorMock();
+            locator.Config.IsNone.ShouldBeTrue();
+
+            var config = new SystemConfig(locator, new EnvironmentMock());
+            config.StartWatching().ShouldBeFalse();
+
+            Directory.CreateDirectory(EtcPath);
+            locator.Config.IsSome.ShouldBeTrue();
+            config.StartWatching().ShouldBeTrue();
+        }*/
 
 
         // --- Setup ---
