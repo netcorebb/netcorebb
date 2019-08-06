@@ -52,7 +52,7 @@ namespace NetCoreBB.Infrastructure
             Watcher.Filters.Add(UserCfg);
             Watcher.Filters.Add(DevCfg);
 
-            Watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
+            Watcher.NotifyFilter = NotifyFilters.LastWrite;
             Watcher.IncludeSubdirectories = false;
 
             Watcher.Changed += (sender, args) => {
