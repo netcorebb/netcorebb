@@ -179,7 +179,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
             Config.StartWatching();
 
             File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true\n [MySQL]\n Port = 2");
-            await Task.Delay(2000);
+            await Task.Delay(500);
 
             obs1.Dispose();
             obs2.Dispose();
@@ -203,7 +203,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
             });
 
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
-            await Task.Delay(2000);
+            await Task.Delay(500);
 
             obs1.Dispose();
             obs2.Dispose();
@@ -231,7 +231,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
             for (int i = 0; i < 3; i++) {
                 File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true\n [MySQL]\n Port = 17");
-                await Task.Delay(2000);
+                await Task.Delay(500);
             }
 
             obs1.Dispose();
@@ -255,7 +255,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
 
             for (int i = 0; i < 3; i++) {
                 File.WriteAllText(ConfigFile, "[MySQL]\n Port = " + i);
-                await Task.Delay(2000);
+                await Task.Delay(500);
             }
 
             obs.Dispose();
