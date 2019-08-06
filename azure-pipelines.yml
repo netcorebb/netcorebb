@@ -7,24 +7,60 @@ trigger:
 - master
 - dev
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
   buildConfiguration: 'Release'
 
-steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '3.0.100-preview7-012821'
-    includePreviewVersions: true
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'windows-latest'
 
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+  steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '3.0.100-preview7-012821'
+      includePreviewVersions: true
 
-- script: dotnet test --configuration $(buildConfiguration)
-  displayName: 'dotnet test $(buildConfiguration)'
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'dotnet build $(buildConfiguration)'
 
-- script: sudo apt-get -y install cloc && ./cloc.sh
-  displayName: cloc
+  - script: dotnet test --configuration $(buildConfiguration)
+    displayName: 'dotnet test $(buildConfiguration)'
+
+- job: macOS
+  pool:
+    vmImage: 'macOS-latest'
+
+  steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '3.0.100-preview7-012821'
+      includePreviewVersions: true
+
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'dotnet build $(buildConfiguration)'
+
+  - script: dotnet test --configuration $(buildConfiguration)
+    displayName: 'dotnet test $(buildConfiguration)'
+
+- job: Ubuntu
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '3.0.100-preview7-012821'
+      includePreviewVersions: true
+
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'dotnet build $(buildConfiguration)'
+
+  - script: dotnet test --configuration $(buildConfiguration)
+    displayName: 'dotnet test $(buildConfiguration)'
+
+  - script: sudo apt-get -y install cloc && ./cloc.sh
+    displayName: cloc
