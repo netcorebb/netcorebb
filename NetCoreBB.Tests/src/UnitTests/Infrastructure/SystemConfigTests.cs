@@ -213,6 +213,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
         }
 
 
+        // Todo: Possible bug under Ubuntu Linux
         [Fact]
         public async Task System_and_MySql_do_not_emit_duplicates()
         {
@@ -230,8 +231,11 @@ namespace NetCoreBB.UnitTests.Infrastructure
             Config.StartWatching();
 
             for (int i = 0; i < 3; i++) {
-                File.WriteAllText(ConfigFile, "[System]\n SystemInstalled = true\n [MySQL]\n Port = 17");
+                const string data = "[System]\n SystemInstalled = true\n [MySQL]\n Port = 17";
+                File.WriteAllText(ConfigFile, data);
                 await Task.Delay(500);
+                var text = File.ReadAllText(ConfigFile);
+                text.ShouldBe(data);
             }
 
             obs1.Dispose();
@@ -241,6 +245,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
         }
 
 
+        // Todo: Possible bug under Ubuntu Linux
         [Fact]
         public async Task System_and_MySql_fire_multiple_times_if_distinct()
         {
@@ -254,8 +259,11 @@ namespace NetCoreBB.UnitTests.Infrastructure
             Config.StartWatching();
 
             for (int i = 0; i < 3; i++) {
-                File.WriteAllText(ConfigFile, "[MySQL]\n Port = " + i);
+                var data = "[MySQL]\n Port = " + i;
+                File.WriteAllText(ConfigFile, data);
                 await Task.Delay(500);
+                var text = File.ReadAllText(ConfigFile);
+                text.ShouldBe(data);
             }
 
             obs.Dispose();
