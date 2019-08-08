@@ -6,7 +6,7 @@
 
 using LanguageExt;
 
-namespace NetCoreBB.Interfaces
+namespace NetCoreBB.Infrastructure.Interfaces
 {
     /// <summary>
     /// Service for retrieving filesystem paths the system uses

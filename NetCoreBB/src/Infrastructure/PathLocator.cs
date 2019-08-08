@@ -6,7 +6,7 @@
 
 using System.IO;
 using LanguageExt;
-using NetCoreBB.Interfaces;
+using NetCoreBB.Infrastructure.Interfaces;
 using ServiceStack;
 using static LanguageExt.Prelude;
 

@@ -6,7 +6,7 @@
 
 using System.IO;
 using NetCoreBB.Infrastructure;
-using NetCoreBB.Interfaces;
+using NetCoreBB.Infrastructure.Interfaces;
 using Shouldly;
 using Xunit;
 
