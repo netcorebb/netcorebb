@@ -104,7 +104,7 @@ namespace NetCoreBB.UnitTests.Infrastructure
             mysql.Username.ShouldBe("d");
             mysql.Password.ShouldBe("e");
             mysql.Protocol.ShouldBe("f");
-            mysql.Port.ShouldBe(12345);
+            mysql.Port.ShouldBe(12345u);
             mysql.Other.ShouldBe(Map(("g", "xxx"), ("h", "123"), ("i", "true")));
         }
 
@@ -113,13 +113,13 @@ namespace NetCoreBB.UnitTests.Infrastructure
         public void Read_works_with_merged_configs()
         {
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 123");
-            Config.Read().Item2.Port.ShouldBe(123);
+            Config.Read().Item2.Port.ShouldBe(123u);
 
             File.WriteAllText(ConfigUsrFile, "[MySQL]\n Port = 456");
-            Config.Read().Item2.Port.ShouldBe(456);
+            Config.Read().Item2.Port.ShouldBe(456u);
 
             File.WriteAllText(ConfigDevFile, "[MySQL]\n Port = 789");
-            Config.Read().Item2.Port.ShouldBe(789);
+            Config.Read().Item2.Port.ShouldBe(789u);
         }
 
 
@@ -130,10 +130,10 @@ namespace NetCoreBB.UnitTests.Infrastructure
             File.WriteAllText(ConfigDevFile, "[MySQL]\n Port = 456");
 
             var config1 = new SystemConfig(new PathLocatorMock(), new EnvironmentMock(true));
-            config1.Read().Item2.Port.ShouldBe(456);
+            config1.Read().Item2.Port.ShouldBe(456u);
 
             var config2 = new SystemConfig(new PathLocatorMock(), new EnvironmentMock(false));
-            config2.Read().Item2.Port.ShouldBe(123);
+            config2.Read().Item2.Port.ShouldBe(123u);
         }
 
 
@@ -142,15 +142,15 @@ namespace NetCoreBB.UnitTests.Infrastructure
         {
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 17");
             var mysql1 = Config.Read().Item2;
-            mysql1.Port.ShouldBe(17);
+            mysql1.Port.ShouldBe(17u);
 
             File.WriteAllText(ConfigFile, "[MySQL]\n sidjhkbfdsih");
             var mysql2 = Config.Read().Item2;
-            mysql2.Port.ShouldBe(17);
+            mysql2.Port.ShouldBe(17u);
 
             File.WriteAllText(ConfigFile, "[MySQL]\n Port = 18");
             var mysql3 = Config.Read().Item2;
-            mysql3.Port.ShouldBe(18);
+            mysql3.Port.ShouldBe(18u);
 
             mysql1.ShouldBe(mysql2);
             mysql2.ShouldNotBe(mysql3);

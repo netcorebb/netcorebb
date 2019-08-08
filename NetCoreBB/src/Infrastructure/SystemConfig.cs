@@ -212,7 +212,7 @@ namespace NetCoreBB.Infrastructure
                     if (val != null) mysql.Protocol = val;
                 }
                 {
-                    var val = GetInt(table, "Port");
+                    var val = GetUInt(table, "Port");
                     if (val != null) mysql.Port = val.Value;
                 }
                 if (!table.ContainsKey("Other")) {
@@ -236,9 +236,9 @@ namespace NetCoreBB.Infrastructure
             return table.ContainsKey(key) ? (bool)table[key] : (bool?)null;
         }
 
-        private static int? GetInt(TomlTable table, string key)
+        private static uint? GetUInt(TomlTable table, string key)
         {
-            return table.ContainsKey(key) ? Convert.ToInt32((long)table[key]) : (int?)null;
+            return table.ContainsKey(key) ? Convert.ToUInt32((long)table[key]) : (uint?)null;
         }
 
         private static string? GetString(TomlTable table, string key)
