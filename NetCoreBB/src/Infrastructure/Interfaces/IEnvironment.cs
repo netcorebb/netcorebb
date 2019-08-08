@@ -4,7 +4,7 @@
  * @copyright © 2019 Roman Volkov
  */
 
-namespace NetCoreBB.Interfaces
+namespace NetCoreBB.Infrastructure.Interfaces
 {
     /// <summary>
     /// Execution environment-related information

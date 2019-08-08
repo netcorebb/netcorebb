@@ -6,7 +6,7 @@
 
 using System;
 
-namespace NetCoreBB.Interfaces
+namespace NetCoreBB.Infrastructure.Interfaces
 {
     /// <summary>
     /// Todo: Live-reloaded configuration from config.toml

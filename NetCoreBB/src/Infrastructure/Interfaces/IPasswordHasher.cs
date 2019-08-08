@@ -7,7 +7,7 @@
 using System;
 using LanguageExt;
 
-namespace NetCoreBB.Interfaces
+namespace NetCoreBB.Infrastructure.Interfaces
 {
     /// <summary>
     /// Password hashing and verifying facility

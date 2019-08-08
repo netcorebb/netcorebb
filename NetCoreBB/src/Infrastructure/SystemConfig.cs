@@ -11,7 +11,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using LanguageExt;
-using NetCoreBB.Interfaces;
+using NetCoreBB.Infrastructure.Interfaces;
 using ServiceStack;
 using Tomlyn;
 using Tomlyn.Model;

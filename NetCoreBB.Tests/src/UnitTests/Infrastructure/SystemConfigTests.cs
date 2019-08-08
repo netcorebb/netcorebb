@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using LanguageExt;
 using MoreLinq;
 using NetCoreBB.Infrastructure;
-using NetCoreBB.Interfaces;
+using NetCoreBB.Infrastructure.Interfaces;
 using ServiceStack;
 using ServiceStack.Text;
 using Shouldly;
