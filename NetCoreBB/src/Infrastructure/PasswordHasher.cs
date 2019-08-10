@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using LanguageExt;
 using LanguageExt.UnsafeValueAccess;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using NetCoreBB.Interfaces;
+using NetCoreBB.Infrastructure.Interfaces;
 using ServiceStack;
 using static LanguageExt.Prelude;
 
