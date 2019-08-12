@@ -1,0 +1,2 @@
+[MySQL]
+ConnectionString = "server=localhost;database=netcorebb_tests;uid=root"
