@@ -6,6 +6,7 @@
 
 using System;
 using System.Data;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dapper;
 using LanguageExt;
@@ -24,7 +25,16 @@ namespace NetCoreBB.Persistence
 
         private MySqlConnection Connection { get; }
         protected string? Prefix { get; set; }
-        protected string TableName => Prefix?.ToLower() + Name.ToLower();
+
+        protected string TableName
+        {
+            get
+            {
+                var regex = new Regex("^[0-9a-zA-Z_-]{1,64}$");
+                var tableName = Prefix?.ToLower() + Name.ToLower();
+                return regex.IsMatch(tableName) ? tableName : throw new Exception("Invalid table name.");
+            }
+        }
 
         protected void Use(Action<IDbConnection> func)
         {
