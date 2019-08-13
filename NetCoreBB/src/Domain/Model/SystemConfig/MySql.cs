@@ -10,6 +10,11 @@ namespace NetCoreBB.Domain.Model.SystemConfig
 {
     public class MySql : Record<MySql>
     {
+        /// <summary>
+        /// Table prefix like `ncbb_`
+        /// </summary>
+        public string? Prefix { get; set; } = null;
+
         public string Server { get; set; } = "localhost";
         public string SslMode { get; set; } = "preferred";
         public string Database { get; set; } = "netcorebb";
