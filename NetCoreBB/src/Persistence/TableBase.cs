@@ -21,12 +21,12 @@ namespace NetCoreBB.Persistence
     /// <typeparam name="T">Entity from domain model</typeparam>
     public abstract partial class TableBase<T> : ITable<T> where T : Record<T>, new()
     {
+        private MySqlConnection Connection { get; }
+        protected string? Prefix { get; }
+
         public abstract string Name { get; }
 
-        private MySqlConnection Connection { get; }
-        protected string? Prefix { get; set; }
-
-        protected string TableName
+        public string TableName
         {
             get
             {

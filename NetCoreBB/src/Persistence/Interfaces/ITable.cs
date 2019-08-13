@@ -16,9 +16,14 @@ namespace NetCoreBB.Persistence.Interfaces
     public interface ITable<T> : IQueryableTable<T> where T : Record<T>
     {
         /// <summary>
-        /// Name of the table; not necessarily the real MySQL table name
+        /// General name of the table; not necessarily the real MySQL table name
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// MySQL table name
+        /// </summary>
+        string TableName { get; }
 
         /// <summary>
         /// Whether the table exists in the database
