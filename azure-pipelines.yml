@@ -16,11 +16,11 @@ jobs:
     vmImage: 'windows-latest'
 
   steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '3.0.100-preview7-012821'
-      includePreviewVersions: true
+#  - task: UseDotNet@2
+#    inputs:
+#      packageType: 'sdk'
+#      version: '3.0.100-preview7-012821'
+#      includePreviewVersions: true
 
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: 'dotnet build $(buildConfiguration)'
@@ -33,12 +33,6 @@ jobs:
     vmImage: 'macOS-latest'
 
   steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '3.0.100-preview7-012821'
-      includePreviewVersions: true
-
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: 'dotnet build $(buildConfiguration)'
 
@@ -50,12 +44,6 @@ jobs:
     vmImage: 'ubuntu-latest'
 
   steps:
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '3.0.100-preview7-012821'
-      includePreviewVersions: true
-
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: 'dotnet build $(buildConfiguration)'
 
