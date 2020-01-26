@@ -1,5 +1,0 @@
-# Used automatically in ASP.NET Core development mode
-
-[System]
-SystemInstalled = true
-DevelopmentMode = true
