@@ -4,6 +4,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <IsPackable>false</IsPackable>
         <GenerateProgramFile>false</GenerateProgramFile>
+        <RootNamespace>NetCoreBB.Data</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
