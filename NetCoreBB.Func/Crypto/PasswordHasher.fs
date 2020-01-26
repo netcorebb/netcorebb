@@ -11,8 +11,8 @@ open System
 open System.Security.Cryptography
 
 module PasswordHasher =
-    let hashLength = 256 / 8
-    let saltLength = 128 / 8
+    let hashLength = 512 / 8
+    let saltLength = 256 / 8
     let iterations = 100_000
 
     let algorithm = KeyDerivationPrf.HMACSHA512
@@ -47,9 +47,7 @@ module PasswordHasher =
         let eq = seq bytes = seq computed
         eq
 
-
-    let isValid()
     (*var lengthSalt = (int)Math.Ceiling(SaltLength * 4.0 / 3);
                 var lengthHash = (int)Math.Ceiling(HashLength * 4.0 / 3);
                 var regex = new Regex("^[0-9a-zA-Z+/]{" + lengthSalt + "}==\\.[0-9a-zA-Z+/]{" + lengthHash + "}=$");
-                return regex.IsMatch(hash.Value);*)  = true
+                return regex.IsMatch(hash.Value);*)

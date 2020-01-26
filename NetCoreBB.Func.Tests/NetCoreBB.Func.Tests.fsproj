@@ -5,6 +5,7 @@
         <IsPackable>false</IsPackable>
         <GenerateProgramFile>false</GenerateProgramFile>
         <RootNamespace>NetCoreBB.Func</RootNamespace>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -12,8 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="PasswordHasherTests.fs" />
-        <Compile Include="Program.fs" />
+        <Compile Include="Crypto\PasswordHasherTests.fs" />
     </ItemGroup>
 
     <ItemGroup>
