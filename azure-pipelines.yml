@@ -8,14 +8,11 @@ variables:
 strategy:
   matrix:
     Windows:
-      imageName: 'windows-latest'
+      vmImage: 'windows-latest'
     macOS:
-      imageName: 'macos-latest'
+      vmImage: 'macos-latest'
     Ubuntu:
-      imageName: 'ubuntu-latest'
-
-pool:
-  vmImage: 'windows-latest'
+      vmImage: 'ubuntu-latest'
 
 steps:
   - task: UseDotNet@2
