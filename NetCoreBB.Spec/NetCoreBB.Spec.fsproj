@@ -5,4 +5,10 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Include="src\User.fs" />
+      <Compile Include="src\Thread.fs" />
+      <Compile Include="src\Post.fs" />
+    </ItemGroup>
+
 </Project>
