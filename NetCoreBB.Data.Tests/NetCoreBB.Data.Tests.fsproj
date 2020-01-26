@@ -5,6 +5,7 @@
         <IsPackable>false</IsPackable>
         <GenerateProgramFile>false</GenerateProgramFile>
         <RootNamespace>NetCoreBB.Data</RootNamespace>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
