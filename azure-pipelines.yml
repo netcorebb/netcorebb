@@ -8,11 +8,11 @@ variables:
 strategy:
   matrix:
     Windows:
-      vmImage: 'windows-latest'
+      vmImage: 'windows-2019'
     macOS:
-      vmImage: 'macos-latest'
+      vmImage: 'macos-10.14'
     Ubuntu:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'ubuntu-18.04'
 pool:
   vmImage: $(vmImage)
 
