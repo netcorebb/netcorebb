@@ -3,5 +3,5 @@ obj/
 .vs/
 .idea/
 .vscode/
-launchSettings.json
-*.user.toml
+*.user
+*.DotSettings
