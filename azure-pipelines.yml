@@ -1,0 +1,30 @@
+trigger:
+  - master
+  - dev
+
+variables:
+  buildConfiguration: 'Release'
+
+jobs:
+  - job: Windows
+    pool:
+      vmImage: 'windows-latest'
+
+    steps:
+      - task: UseDotNet@2
+        displayName: '.NET Core 3.1.x'
+        inputs:
+          version: '3.1.x'
+          packageType: 'sdk'
+      - script: dotnet build -c $(buildConfiguration)
+        displayName: 'dotnet build $(buildConfiguration)'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Test'
+        inputs:
+          command: test
+          projects: '*.Tests'
+          arguments: '-c $(buildConfiguration)'
+
+      - script: dotnet test -c $(buildConfiguration)
+        displayName: 'dotnet test $(buildConfiguration)'
