@@ -5,29 +5,27 @@ trigger:
 variables:
   buildConfiguration: 'Release'
 
-jobs:
-  -job: Test
-  strategy:
-    matrix:
-      Windows:
-        vmImage: 'windows-latest'
-      macOS:
-        vmImage: 'macos-latest'
-      Ubuntu:
-        vmImage: 'ubuntu-latest'
-  pool:
-    vmImage: $(vmImage)
+strategy:
+  matrix:
+    Windows:
+      vmImage: 'windows-latest'
+    macOS:
+      vmImage: 'macos-latest'
+    Ubuntu:
+      vmImage: 'ubuntu-latest'
+pool:
+  vmImage: $(vmImage)
 
-  steps:
-    - task: UseDotNet@2
-      displayName: '.NET Core 3.1.x'
-      inputs:
-        version: '3.1.x'
-        packageType: 'sdk'
+steps:
+  - task: UseDotNet@2
+    displayName: '.NET Core 3.1.x'
+    inputs:
+      version: '3.1.x'
+      packageType: 'sdk'
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Test $(buildConfiguration)'
-      inputs:
-        command: test
-        projects: '*.Tests'
-        arguments: '-c $(buildConfiguration)'
+  - task: DotNetCoreCLI@2
+    displayName: 'Test $(buildConfiguration)'
+    inputs:
+      command: test
+      projects: '*.Tests'
+      arguments: '-c $(buildConfiguration)'
