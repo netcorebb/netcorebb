@@ -9,11 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Controllers\WeatherForecast.fs" />
-        <Compile Include="Controllers\WeatherForecastController.fs" />
-        <Folder Include="Logs" />
-        <Content Include="Config\database.toml" />
-        <Compile Include="Init.fs" />
+        <Compile Include="src\Controllers\WeatherForecast.fs" />
+        <Compile Include="src\Controllers\WeatherForecastController.fs" />
+        <Compile Include="src\Init.fs" />
     </ItemGroup>
 
     <ItemGroup>
