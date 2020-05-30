@@ -11,6 +11,6 @@ charset = utf-8
 indent_style = space
 indent_size = 4
 
-[{*.json,*.yml,*.yaml,*.toml,*.xml,*.html,*.css,*.scss,*.styl,*.fsproj}]
+[{*.json,*.yml,*.yaml,*.toml,*.xml,*.html,*.css,*.scss,*.styl,*.fsproj,*.cshtml}]
 indent_style = space
 indent_size = 2
