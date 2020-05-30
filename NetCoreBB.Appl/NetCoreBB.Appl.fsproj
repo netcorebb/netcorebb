@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\NetCoreBB.Func\NetCoreBB.Func.fsproj" />
-      <ProjectReference Include="..\NetCoreBB.Spec\NetCoreBB.Spec.fsproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetCoreBB.Data\NetCoreBB.Data.fsproj"/>
+    <ProjectReference Include="..\NetCoreBB.Func\NetCoreBB.Func.fsproj"/>
+    <ProjectReference Include="..\NetCoreBB.Spec\NetCoreBB.Spec.fsproj"/>
+  </ItemGroup>
 
 </Project>
