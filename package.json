@@ -1,0 +1,15 @@
+{
+  "name": "netcorebb",
+  "version": "1.0.0",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+  },
+  "dependencies": {
+    "normalize.css": "8.0.1"
+  },
+  "devDependencies": {
+    "gulp": "4.0.2",
+    "gulp-stylus": "2.7.0",
+    "stylus": "0.54.7"
+  }
+}

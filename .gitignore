@@ -6,3 +6,7 @@ obj/
 .fake/
 *.user
 *.DotSettings
+node_modules/
+*.map
+*.css
+*.js
