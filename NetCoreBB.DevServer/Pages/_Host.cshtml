@@ -9,20 +9,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NetCoreBB</title>
   <base href="/">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
-  <link rel="stylesheet" href="css/index.css">
+  <meta name="description" content="NetCoreBB Forum Software">
 </head>
 <body>
-<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item has-text-weight-bold is-size-5" href="https://fsbolero.io">
-      <img style="height:40px" src="https://github.com/fsbolero/website/raw/master/src/Website/img/wasm-fsharp.png"/>
-      &nbsp;
-      Bolero
-    </a>
-  </div>
-</nav>
-<div id="main">@(await Html.RenderComponentAsync<Frontend.Main.MyApp>(BoleroHostConfig))</div>
+<div id="main">@(await Html.RenderComponentAsync<Frontend.Main.RootComponent>(BoleroHostConfig))</div>
 @Html.RenderBoleroScript(BoleroHostConfig)
 </body>
 </html>
