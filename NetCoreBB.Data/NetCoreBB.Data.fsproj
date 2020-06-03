@@ -6,7 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetCoreBB.Spec\NetCoreBB.Spec.fsproj"/>
+    <ProjectReference Include="..\NetCoreBB.Spec\NetCoreBB.Spec.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" Version="2.10.4" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
+    <PackageReference Include="MongoDB.Driver.GridFS" Version="2.10.4" />
   </ItemGroup>
 
 </Project>
