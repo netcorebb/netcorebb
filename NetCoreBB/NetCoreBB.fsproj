@@ -5,19 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Controllers\WeatherForecast.fs"/>
-    <Compile Include="Controllers\WeatherForecastController.fs"/>
-    <Compile Include="Init.fs"/>
+    <Compile Include="Controllers\StatusController.fs" />
+    <Compile Include="Init.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetCoreBB.Appl\NetCoreBB.Appl.fsproj"/>
+    <ProjectReference Include="..\NetCoreBB.Appl\NetCoreBB.Appl.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0"/>
-    <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1"/>
-    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0"/>
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
   </ItemGroup>
 
 </Project>

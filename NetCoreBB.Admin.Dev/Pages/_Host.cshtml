@@ -1,0 +1,18 @@
+@page "/"
+@namespace NetCoreBB.Admin.Dev.Pages
+@using Bolero.Server.RazorHost
+@inject IBoleroHostConfig BoleroHostConfig
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetCoreBB – Admin Control Panel</title>
+  <base href="/">
+  <meta name="description" content="NetCoreBB Forum Software">
+</head>
+<body>
+<div id="main">@(await Html.RenderComponentAsync<Main.RootComponent>(BoleroHostConfig))</div>
+@Html.RenderBoleroScript(BoleroHostConfig)
+</body>
+</html>

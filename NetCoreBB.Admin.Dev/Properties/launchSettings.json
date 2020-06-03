@@ -1,10 +1,10 @@
 {
   "profiles": {
-    "NetCoreBB.DevServer": {
+    "NetCoreBB.Admin": {
       "commandName": "Project",
       "launchBrowser": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-      "applicationUrl": "https://localhost:4001",
+      "applicationUrl": "https://localhost:4002",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

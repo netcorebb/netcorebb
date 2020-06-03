@@ -1,4 +1,7 @@
-module NetCoreBB.Frontend.Main
+module NetCoreBB.Frontend.MainX
+
+(*
+module NetCoreBB.Frontend.MainX
 
 open System
 open Elmish
@@ -19,7 +22,7 @@ type Page =
 type Model =
     {
         page: Page
-        counter: int
+        counterI: int
         books: Book[] option
         error: string option
         username: string
@@ -40,7 +43,7 @@ and Book =
 let initModel =
     {
         page = Home
-        counter = 0
+        counterI = 0
         books = None
         error = None
         username = ""
@@ -102,11 +105,11 @@ let update remote message model =
         { model with page = page }, Cmd.none
 
     | Increment ->
-        { model with counter = model.counter + 1 }, Cmd.none
+        { model with counterI = model.counterI + 1 }, Cmd.none
     | Decrement ->
-        { model with counter = model.counter - 1 }, Cmd.none
+        { model with counterI = model.counterI - 1 }, Cmd.none
     | SetCounter value ->
-        { model with counter = value }, Cmd.none
+        { model with counterI = value }, Cmd.none
 
     | GetBooks ->
         let cmd = Cmd.ofAsync remote.getBooks () GotBooks Error
@@ -141,7 +144,7 @@ let update remote message model =
 /// Connects the routing system to the Elmish application.
 let router = Router.infer SetPage (fun model -> model.page)
 
-type Main = Template<"wwwroot/main.html">
+type Main = Template<"test.html">
 
 let homePage model dispatch =
     Main.Home().Elt()
@@ -150,7 +153,7 @@ let counterPage model dispatch =
     Main.Counter()
         .Decrement(fun _ -> dispatch Decrement)
         .Increment(fun _ -> dispatch Increment)
-        .Value(model.counter, fun v -> dispatch (SetCounter v))
+        .Value(model.counterI, fun v -> dispatch (SetCounter v))
         .Elt()
 
 let dataPage model (username: string) dispatch =
@@ -232,3 +235,4 @@ type MyApp() =
 #if DEBUG
         |> Program.withHotReload
 #endif
+*)

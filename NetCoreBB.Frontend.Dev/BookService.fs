@@ -1,4 +1,4 @@
-namespace NetCoreBB.DevServer
+namespace NetCoreBB.Frontend.Dev
 
 open Bolero
 open Bolero.Remoting
@@ -9,13 +9,14 @@ open System
 open System.IO
 
 
+(*
 type BookService(ctx: IRemoteContext, env: IWebHostEnvironment) =
-    inherit RemoteHandler<Main.BookService>()
+    inherit RemoteHandler<MainX.BookService>()
 
     let books =
         Path.Combine(env.ContentRootPath, "data/books.json")
         |> File.ReadAllText
-        |> Json.Deserialize<Main.Book []>
+        |> Json.Deserialize<MainX.Book []>
         |> ResizeArray
 
     override this.Handler =
@@ -38,3 +39,4 @@ type BookService(ctx: IRemoteContext, env: IWebHostEnvironment) =
           signOut = fun () -> async { return! ctx.HttpContext.AsyncSignOut() }
 
           getUsername = ctx.Authorize <| fun () -> async { return ctx.HttpContext.User.Identity.Name } }
+*)

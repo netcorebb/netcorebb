@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Include="DomainTypes.fs" />
     <Compile Include="DomainFunctions.fs" />
+    <Compile Include="SystemConfig.fs" />
+    <Compile Include="Admin.fs" />
   </ItemGroup>
 
 </Project>

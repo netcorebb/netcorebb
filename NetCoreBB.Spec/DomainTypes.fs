@@ -2,7 +2,10 @@ module NetCoreBB.Spec.DomainTypes
 
 // User
 
-type Email = private | Email of string
+type Email = Email of string
+
+type PasswordHash = PasswordHash of string
+
 
 type ContactInfo =
     { Email: string }
@@ -68,3 +71,10 @@ type Site =
 
 
 // Search
+
+type SearchResult = unit
+
+
+// Theming
+
+type Theme = unit
