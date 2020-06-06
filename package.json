@@ -2,16 +2,24 @@
   "name": "netcorebb",
   "version": "1.0.0",
   "license": "GPL-3.0-or-later",
-  "scripts": {},
+  "scripts": {
+    "style": "node node_modules/.bin/gulp style"
+  },
   "dependencies": {
     "normalize.css": "8.0.1"
   },
   "devDependencies": {
+    "@types/clean-css": "4.2.1",
     "@types/del": "4.0.0",
     "@types/gulp": "4.0.6",
+    "@types/gulp-rename": "0.0.33",
     "@types/gulp-stylus": "2.7.1",
+    "clean-css": "4.2.3",
     "del": "5.1.0",
+    "fs": "0.0.1-security",
     "gulp": "4.0.2",
+    "gulp-clean-css": "4.3.0",
+    "gulp-rename": "2.0.0",
     "gulp-stylus": "2.7.0",
     "gulpclass": "0.2.0",
     "stylus": "0.54.7",
