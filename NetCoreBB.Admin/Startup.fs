@@ -1,14 +1,15 @@
-namespace NetCoreBB.Admin
+module NetCoreBB.Admin.Startup
 
-open Bolero.Remoting.Client
+//open Bolero.Remoting.Client
 open Microsoft.AspNetCore.Components.WebAssembly.Hosting
 
-module Program =
 
-    [<EntryPoint>]
-    let main args =
-        let builder = WebAssemblyHostBuilder.CreateDefault(args)
-        builder.RootComponents.Add<Main.RootComponent>("#main")
-        //builder.Services.AddRemoting(builder.HostEnvironment) |> ignore
-        builder.Build().RunAsync() |> ignore
-        0
+[<EntryPoint>]
+let main args =
+    let wasmBuilder = WebAssemblyHostBuilder.CreateDefault(args)
+    wasmBuilder.RootComponents.Add<Root.Component>("#app")
+    //builder.Services.AddRemoting(builder.HostEnvironment) |> ignore
+    wasmBuilder.Build().RunAsync() |> ignore
+
+    let exitCodeOk = 0
+    exitCodeOk
