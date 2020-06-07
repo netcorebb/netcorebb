@@ -5,9 +5,7 @@
   "scripts": {
     "style": "node node_modules/.bin/gulp style"
   },
-  "dependencies": {
-    "normalize.css": "8.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/clean-css": "4.2.1",
     "@types/del": "4.0.0",

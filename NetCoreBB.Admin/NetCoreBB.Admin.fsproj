@@ -7,11 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Styles\imports.styl" />
+    <Content Include="Styles\normalize.styl" />
     <Content Include="Styles\global.styl" />
     <Content Include="Root\root.styl" />
     <Content Include="Root\root.html" />
     <Compile Include="Root\Root.fs" />
     <Compile Include="Pages\Dashboard\Dashboard.fs" />
+    <Compile Include="Pages\ReadMe\ReadMe.fs" />
+    <Compile Include="Pages\Install\Install.fs" />
     <Compile Include="Startup.fs" />
   </ItemGroup>
 

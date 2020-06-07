@@ -7,12 +7,17 @@ open Elmish
 
 // Model
 
-type Page = | [<EndPoint "/">] Dashboard
+type Page =
+    | [<EndPoint "/readme">] ReadMe
+    | [<EndPoint "/install">] Install
+    | [<EndPoint "/">] Dashboard
 
 type Model =
-    { Page: Page }
+    { Page: Page
+      DualPaneOn: bool
+      OpenNewTabs: bool }
 
-let initialModel = { Page = Dashboard }
+let initialModel = { Page = Dashboard; DualPaneOn = false; OpenNewTabs = false }
 
 
 // Update

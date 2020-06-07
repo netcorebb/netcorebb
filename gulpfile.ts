@@ -12,16 +12,12 @@ export class Gulpfile {
 
     @Task("style")
     style() {
-        return gulp.src([
-           // "node_modules/normalize.css/normalize.css",
-            "NetCoreBB.Admin/Styles/global.styl"
-        ])
+        return gulp.src(
+            "NetCoreBB.Admin/Styles/imports.styl"
+        )
             .pipe(stylus({compress: false}))
-            .pipe(cleanCss({debug: true}))
-            .pipe(rename({
-                basename: 'style',
-                suffix: '.min',
-            }))
+            //.pipe(cleanCss({debug: false}))
+            .pipe(rename("style.css"))
             .pipe(gulp.dest("NetCoreBB.Admin/wwwroot"))
     }
 }
