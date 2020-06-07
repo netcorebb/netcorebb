@@ -1,6 +1,7 @@
 module NetCoreBB.Admin.Root
 
 open Bolero
+open Bolero.Html
 open Bolero.Templating.Client
 open Elmish
 
@@ -17,7 +18,10 @@ type Model =
       DualPaneOn: bool
       OpenNewTabs: bool }
 
-let initialModel = { Page = Dashboard; DualPaneOn = false; OpenNewTabs = false }
+let initialModel =
+    { Page = Dashboard
+      DualPaneOn = false
+      OpenNewTabs = false }
 
 
 // Update
@@ -31,7 +35,12 @@ let update (message: Message) (model: Model) = model
 
 type Html = Template<"Root/root.html">
 
-let render (model: Model) (dispatch: Dispatch<Message>) = Html.root().Elt()
+type ReloadHtml = Template<"Root/reload.html">
+
+let render (model: Model) (dispatch: Dispatch<Message>) =
+    concat
+        [ ReloadHtml.reload().Elt()
+          Html.root().Elt() ]
 
 
 // Component
