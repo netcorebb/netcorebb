@@ -1,8 +1,8 @@
-# NetCoreBB Backend [Alpha Phase]
+# NetCoreBB Forum Software
 
 - Master:
-[![Build Status](https://dev.azure.com/NetCoreBB/NetCoreBB%20Backend/_apis/build/status/netcorebb.netcorebb-backend?branchName=master)](https://dev.azure.com/NetCoreBB/NetCoreBB%20Backend/_build/latest?definitionId=2&branchName=master)
+[![Build Status](https://dev.azure.com/NetCoreBB/NetCoreBB/_apis/build/status/NetCoreBB?branchName=master)](https://dev.azure.com/NetCoreBB/NetCoreBB/_build/latest?definitionId=2&branchName=master)
 - Dev:
-[![Build Status](https://dev.azure.com/NetCoreBB/NetCoreBB%20Backend/_apis/build/status/netcorebb.netcorebb-backend?branchName=dev)](https://dev.azure.com/NetCoreBB/NetCoreBB%20Backend/_build/latest?definitionId=2&branchName=dev)
+[![Build Status](https://dev.azure.com/NetCoreBB/NetCoreBB/_apis/build/status/NetCoreBB?branchName=dev)](https://dev.azure.com/NetCoreBB/NetCoreBB/_build/latest?definitionId=2&branchName=dev)
 
-Forum software work in progress …
+This project is at an early stage and work in progress.

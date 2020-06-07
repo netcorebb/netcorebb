@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>NetCoreBB</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="src\library.hpp"/>
+    <Content Include="src\argon2.cpp"/>
+    <Content Include="CMakeLists.txt"/>
+    <Compile Include="Library.fs"/>
+  </ItemGroup>
+
+</Project>

@@ -7,10 +7,10 @@ insert_final_newline = true
 end_of_line = lf
 charset = utf-8
 
-[{*.cs,*.fs}]
+[{*.cs,*.fs,*.fsx,*.js,*.ts}]
 indent_style = space
 indent_size = 4
 
-[{*.json,*.yml,*.yaml,*.toml,*.xml,*.html}]
+[{*.json,*.yml,*.yaml,*.toml,*.xml,*.html,*.css,*.scss,*.styl,*.fsproj,*.cshtml}]
 indent_style = space
 indent_size = 2

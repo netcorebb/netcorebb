@@ -3,5 +3,10 @@ obj/
 .vs/
 .idea/
 .vscode/
+.fake/
 *.user
 *.DotSettings
+node_modules/
+*.map
+*.css
+reload.html
